@@ -1,0 +1,142 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String?
+  image             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  familySize        Int       @default(4)
+  cookingSkill      SkillLevel @default(INTERMEDIATE)
+  budgetPerWeek     Decimal?  @db.Decimal(10, 2)
+  preferredCuisines String[]  // ["PERSIAN"]
+  dietaryPrefs      String[]  // ["HIGH_PROTEIN", "LOW_CARB"]
+  allergies         String[]
+  kitchenEquipment  String[]
+
+  pantryItems       PantryItem[]
+  cookedMeals       CookedMeal[]
+  mealPlans         MealPlan[]
+  ratings           RecipeRating[]
+  preferences       UserPreference[]
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model PantryItem {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  quantity     Decimal   @db.Decimal(10, 2)
+  unit         String
+  purchaseDate DateTime
+  expiryDate   DateTime?
+  storage      StorageLocation
+  barcode      String?
+  notes        String?
+  createdAt    DateTime  @default(now())
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum StorageLocation {
+  REFRIGERATOR
+  FREEZER
+  PANTRY
+}
+
+model Recipe {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  persianName   String
+  englishName   String
+  description   String   @db.Text
+  history       String?  @db.Text
+  prepTime      Int
+  cookTime      Int
+  difficulty    Difficulty
+  calories      Int
+  servings      Int      @default(4)
+  ingredients   Json
+  steps         Json
+  nutrition     Json
+  culturalNotes String?  @db.Text
+  tips          String[]
+  substitutions Json?
+  videos        String[]
+  createdAt     DateTime @default(now())
+
+  ratings       RecipeRating[]
+  cookedMeals   CookedMeal[]
+  mealPlans     MealPlan[]
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model CookedMeal {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  cookedAt  DateTime @default(now())
+  rating    Int?
+
+  user      User     @relation(fields: [userId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+}
+
+model MealPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  recipeId  String
+  servings  Int
+
+  user      User     @relation(fields: [userId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+}
+
+model RecipeRating {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+}
+
+model UserPreference {
+  id     String @id @default(cuid())
+  userId String
+  type   String // "FAVORITE" | "DISLIKED"
+  item   String
+
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  unlockedAt  DateTime @default(now())
+}
