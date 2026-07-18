@@ -1,8 +1,2 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// Prisma configuration file
+// The actual schema is in prisma/schema.prisma
