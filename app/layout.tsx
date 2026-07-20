@@ -12,9 +12,6 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: 'خانه | Khaaneh — آشپزخانه هوشمند ایرانی',
   description: 'دستیار هوشمند آشپزخانه — بفهمید امروز با مواد موجود در خانه‌تان چه بپزید',
-  icons: {
-    icon: '/favicon.ico',
-  },
 }
 
 export default function RootLayout({
@@ -23,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className={`${vazirmatn.variable} font-sans antialiased bg-zinc-50 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-50`}>
         {children}
         <Toaster position="top-center" richColors closeButton />

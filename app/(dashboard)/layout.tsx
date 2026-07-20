@@ -23,6 +23,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link href="/planner" className="hover:text-emerald-600 transition-colors">برنامه غذایی</Link>
             <Link href="/profile" className="hover:text-emerald-600 transition-colors">پروفایل</Link>
             <Link href="/achievements" className="hover:text-emerald-600 transition-colors">دستاوردها</Link>
+            <Link href="/shopping" className="hover:text-emerald-600 transition-colors">لیست خرید</Link>
+            <Link href="/stats" className="hover:text-emerald-600 transition-colors">آمار</Link>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-zinc-500">

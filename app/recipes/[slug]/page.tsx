@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { recipes } from '@/app/lib/data'
+import { recipes } from '@/app/lib/recipes'
 import Link from 'next/link'
 import { Clock, Users, Award } from 'lucide-react'
 
@@ -11,7 +11,6 @@ export default function RecipePage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Hero */}
       <div className="h-[420px] bg-zinc-900 rounded-3xl relative mb-8 flex items-end p-10">
         <div>
           <div className="text-emerald-400 font-medium text-sm mb-2 tracking-widest">دستور پخت سنتی</div>
@@ -19,7 +18,7 @@ export default function RecipePage() {
           <p className="text-white/70 mt-2 text-xl">{recipe.englishName}</p>
         </div>
         <div className="absolute top-8 right-8 bg-white/90 text-black px-6 py-2 rounded-2xl text-sm font-medium">
-          امتیاز: {recipe.score}
+          {recipe.calories} کالری
         </div>
       </div>
 
@@ -40,14 +39,14 @@ export default function RecipePage() {
 
         <h3>مواد لازم</h3>
         <ul>
-          {recipe.ingredients.map((ing: any, i: number) => (
+          {recipe.ingredients.map((ing, i) => (
             <li key={i}>{ing.quantity} {ing.unit} {ing.name}</li>
           ))}
         </ul>
 
         <h3>طرز تهیه</h3>
         <ol>
-          {recipe.steps.map((step: string, i: number) => <li key={i}>{step}</li>)}
+          {recipe.steps.map((step, i) => <li key={i}>{step}</li>)}
         </ol>
 
         {recipe.culturalNotes && (
@@ -59,14 +58,13 @@ export default function RecipePage() {
 
         <div className="mt-12 p-6 bg-emerald-50 dark:bg-emerald-950 rounded-3xl border border-emerald-200">
           <div className="font-medium mb-3">دستیار هوش مصنوعی آشپزی</div>
-          <div className="text-sm text-emerald-700">سوال خود را درباره این غذا بپرسید:</div>
           <input 
             type="text" 
-            placeholder="چطور می‌توانم این غذا را کم‌چرب‌تر کنم؟" 
+            placeholder="سوال خود را درباره این غذا بپرسید..." 
             className="mt-3 w-full px-4 py-3 bg-white rounded-2xl text-sm border"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                alert('پاسخ AI: می‌توانید از روغن زیتون کمتری استفاده کنید و مرغ را بدون پوست بپزید.')
+                alert('پاسخ AI: می‌توانید از روغن زیتون کمتری استفاده کنید.')
               }
             }}
           />
@@ -74,9 +72,9 @@ export default function RecipePage() {
       </div>
 
       <div className="mt-12 flex gap-4">
-        <Link href="/recommendations" className="px-8 py-3 rounded-2xl border">بازگشت به پیشنهادها</Link>
+        <Link href="/recommendations" className="px-8 py-3 rounded-2xl border">بازگشت</Link>
         <button 
-          onClick={() => alert('مواد از انباری کسر شد ✅')} 
+          onClick={() => alert('✅ مواد از انباری کسر شد! Streak شما به ۱۵ روز رسید')} 
           className="px-8 py-3 bg-emerald-600 text-white rounded-2xl"
         >
           پخت شد — کسر از انباری

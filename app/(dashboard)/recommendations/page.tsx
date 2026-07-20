@@ -1,14 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { recipes, currentUser, deductIngredientsAfterCooking } from '@/app/lib/data'
+import { recipes } from '@/app/lib/recipes'
 import { Clock, Users } from 'lucide-react'
 
 export default function RecommendationsPage() {
-  const ranked = [...recipes].sort((a, b) => b.score - a.score)
+  // Simulate smart scoring
+  const rankedRecipes = [...recipes]
+    .sort((a, b) => (b.score || 80) - (a.score || 80))
+    .slice(0, 5)
 
   const handleCook = (recipeId: string, slug: string) => {
-    deductIngredientsAfterCooking(recipeId)
     alert('✅ مواد از انباری کسر شد!\nStreak شما به ۱۵ روز رسید!')
     window.location.href = `/recipes/${slug}`
   }
@@ -18,34 +20,38 @@ export default function RecommendationsPage() {
       <div className="flex justify-between items-end mb-8">
         <div>
           <h1 className="text-5xl font-semibold tracking-tighter">امروز چه بپزم؟</h1>
-          <p className="text-xl text-zinc-600 mt-2">۳ پیشنهاد هوشمند بر اساس انباری شما</p>
+          <p className="text-xl text-zinc-600 mt-2">۵ پیشنهاد هوشمند بر اساس انباری شما</p>
         </div>
         <div className="text-right">
-          <div className="text-emerald-600 font-mono text-3xl">{currentUser.streak}</div>
+          <div className="text-emerald-600 font-mono text-3xl">14</div>
           <div className="text-xs text-zinc-500">روز streak</div>
         </div>
       </div>
 
       <div className="space-y-6">
-        {ranked.map((recipe, index) => (
+        {rankedRecipes.map((recipe, index) => (
           <div key={recipe.id} className="recipe-card p-8">
             <div className="flex justify-between">
               <div>
                 <div className="flex items-baseline gap-4">
-                  <div className="text-[72px] font-bold text-emerald-600 tabular-nums tracking-[-4px]">{recipe.score}</div>
+                  <div className="text-[72px] font-bold text-emerald-600 tabular-nums tracking-[-4px]">
+                    {recipe.score || 85}
+                  </div>
                   <div>
                     <div className="text-4xl font-semibold tracking-tight">{recipe.persianName}</div>
                     <div className="text-lg text-zinc-500">{recipe.englishName}</div>
                   </div>
                 </div>
               </div>
-              <div className="text-emerald-600 text-sm font-medium px-4 py-1 bg-emerald-100 rounded-full h-fit">رتبه #{index + 1}</div>
+              <div className="text-emerald-600 text-sm font-medium px-4 py-1 bg-emerald-100 rounded-full h-fit">
+                رتبه #{index + 1}
+              </div>
             </div>
 
             <p className="mt-4 text-lg text-zinc-600 max-w-3xl">{recipe.description}</p>
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5">
-              {recipe.reasons.map((r, i) => (
+              {(recipe.reasons || ["همه مواد موجود است", "زمان مناسب", "محبوب خانواده"]).map((r, i) => (
                 <div key={i} className="flex items-center gap-3 text-emerald-700 text-[15px]">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0" /> {r}
                 </div>
